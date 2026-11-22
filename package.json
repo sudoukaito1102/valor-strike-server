@@ -1,0 +1,1 @@
+{"dependencies":{"ws":"^8.18.0"},"description":"VALOR STRIKE オンライン対戦用 WebSocket 中継サーバー（ゲームロジックなし・状態リレー専用）","engines":{"node":">=18"},"main":"server.js","name":"valor-strike-server","scripts":{"start":"node server.js","test":"node test.js"},"version":"1.0.0"}
