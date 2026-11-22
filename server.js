@@ -31,7 +31,7 @@ const { WebSocketServer } = require('ws');
 const PORT = process.env.PORT || 8080;
 const MAX_PER_ROOM = 10;
 const MAX_MESSAGE_BYTES = 16 * 1024; // 16KB
-const HEARTBEAT_MS = 15000;          // 15秒ごとに ping、応答がなければ次回に切断（実質30秒無通信で切断）
+const HEARTBEAT_MS = 5000;           // 5秒ごとに ping、応答がなければ次回に切断（実質10秒無通信で切断）
 
 /** rooms: Map<roomName, Map<clientId, client>> */
 const rooms = new Map();
@@ -157,6 +157,12 @@ wss.on('connection', (ws) => {
       } else {
         broadcast(roomMap, myId, out);
       }
+      return;
+    }
+    if (msg.t === 'leave') {
+      // 明示的な退出通知: ハートビート検出を待たず即座に片付けて peer-leave を配信する
+      cleanup();
+      try { ws.close(); } catch { /* noop */ }
       return;
     }
     // 未知のタイプは無視
